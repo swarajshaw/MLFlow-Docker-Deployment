@@ -3,8 +3,8 @@ import os
 from minio import Minio
 from minio.error import InvalidResponseError
 
-accessID = os.environ.get('AWS_ACCESS_KEY_ID')
-accessSecret = os.environ.get('AWS_SECRET_ACCESS_KEY')
+accessID = os.environ.get('MINIO_ROOT_USER')
+accessSecret = os.environ.get('MINIO_ROOT_PASSWORD')
 minioUrl = os.environ.get('MLFLOW_S3_ENDPOINT_URL')
 bucketName = os.environ.get('MLFLOW_BUCKET_NAME')
 
