@@ -35,4 +35,24 @@ s3Client = Minio(
     secure=False
 )
 
+# Check if the bucket already exists
+if s3Client.bucket_exists(bucketName):
+    # Delete all objects in the bucket
+    objects = s3Client.list_objects(bucketName, recursive=True)
+    for obj in objects:
+        s3Client.remove_object(bucketName, obj.object_name)
+    # Delete the bucket
+    s3Client.remove_bucket(bucketName)
+
+# Create a new bucket with the same name
 s3Client.make_bucket(bucketName)
+
+# try:
+#     # Create the bucket
+#     s3Client.make_bucket(bucketName)
+# except minio.error.S3Error as e:
+#     if e.code == "BucketAlreadyOwnedByYou":
+#         print("Bucket '{}' already exists and is owned by you".format(bucketName))
+#     else:
+#         # Handle other S3 errors
+#         raise e
