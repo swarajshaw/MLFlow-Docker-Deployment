@@ -1,26 +1,24 @@
 version: "3.9"
-
 services:
   minio:
     image: minio/minio:latest
+    restart: unless-stopped
     container_name: mlflow_s3
-    restart: always
     ports:
-      - 9000:9000
-      - 9090:9090
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
     command: server /data --console-address ":9090"
     networks:
       - internal
       - public
-    environment:
-      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
-      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_data:/data
-
   db:
     image: mysql/mysql-server:5.7.40
-    restart: always
+    restart: unless-stopped
     container_name: mlflow_db
     expose:
       - "3306"
@@ -33,11 +31,10 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - internal
-
   mlflow:
     container_name: mlflow_server
     image: mlflow_server
-    restart: always
+    restart: unless-stopped
     build:
       context: ./mlflow
       dockerfile: Dockerfile
